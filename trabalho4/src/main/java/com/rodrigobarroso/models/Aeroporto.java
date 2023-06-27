@@ -1,11 +1,13 @@
 package com.rodrigobarroso.models;
 
 import javax.persistence.*;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name="aeroporto")
-public class Aeroporto {
+public class Aeroporto implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id")

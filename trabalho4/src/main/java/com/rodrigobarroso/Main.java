@@ -3,20 +3,18 @@ package com.rodrigobarroso;
 import com.rodrigobarroso.models.Aeroporto;
 import com.rodrigobarroso.models.Terminal;
 import com.rodrigobarroso.servico.AeroportoAppService;
+import com.rodrigobarroso.servico.controle.FabricaDeServico;
 import com.rodrigobarroso.util.AeroportoNotFoundException;
 import org.hibernate.exception.ConstraintViolationException;
+
 import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Scanner;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class Main {
     public static void main(String[] args) {
-        ApplicationContext fabrica = new ClassPathXmlApplicationContext("beans-jpa.xml");
 
-        AeroportoAppService aeroportoAppService = (AeroportoAppService) fabrica.getBean("aeroportoAppService");
-
+        AeroportoAppService aeroportoAppService = FabricaDeServico.getServico(AeroportoAppService.class);
         Scanner sc = new Scanner(System.in);
         int options;
         boolean running = true;
@@ -47,7 +45,7 @@ public class Main {
 
     }
 
-    private static void adicionaAeroporto(AeroportoAppService aeroportoAppService) {
+    private static void adicionaAeroporto(AeroportoAppService aeroAppService) {
         String codigo;
         String nome;
         String endereco;
@@ -76,7 +74,7 @@ public class Main {
         aeroporto = new Aeroporto(codigo, nome, endereco, qtdPistas, qtdCompanhias);
 
         try {
-            aeroportoAppService.adiciona(aeroporto);
+            aeroAppService.adiciona(aeroporto);
             System.out.println('\n' + nome + " adicionado com sucesso!");
         }
         catch(ConstraintViolationException e) {
@@ -84,7 +82,7 @@ public class Main {
         }
     }
 
-    private static void atualizaAeroporto(AeroportoAppService aeroportoAppService) {
+    private static void atualizaAeroporto(AeroportoAppService aeroAppService) {
         String codigo;
         Aeroporto aeroporto;
         Scanner sc = new Scanner(System.in);
@@ -93,7 +91,7 @@ public class Main {
         codigo = sc.nextLine();
 
         try {
-            aeroporto = aeroportoAppService.recuperaAeroporto(codigo);
+            aeroporto = aeroAppService.recuperaAeroporto(codigo);
             System.out.println('\n' +
                     "Id: " + aeroporto.getId() +
                     " | IATA: " + aeroporto.getCodigo() +
@@ -118,7 +116,7 @@ public class Main {
                     String novoCodigo = sc.nextLine();
                     aeroporto.setCodigo(novoCodigo);
                     try {
-                        aeroportoAppService.altera(aeroporto);
+                        aeroAppService.altera(aeroporto);
                         System.out.println('\n' + "Alteração de código IATA realizada com sucesso!");
                     } catch (NoResultException e) {
                         System.out.println('\n' + "Aeroporto não encontrado!");
@@ -129,7 +127,7 @@ public class Main {
                     String novoNome = sc.nextLine();
                     aeroporto.setNome(novoNome);
                     try {
-                        aeroportoAppService.altera(aeroporto);
+                        aeroAppService.altera(aeroporto);
                         System.out.println('\n' + "Alteração de nome realizada com sucesso!");
                     } catch (NoResultException e) {
                         System.out.println('\n' + "Aeroporto não encontrado!");
@@ -140,7 +138,7 @@ public class Main {
                     String novoEndereco = sc.nextLine();
                     aeroporto.setEndereco(novoEndereco);
                     try {
-                        aeroportoAppService.altera(aeroporto);
+                        aeroAppService.altera(aeroporto);
                         System.out.println('\n' + "Alteração de endereço realizada com sucesso!");
                     } catch (NoResultException e) {
                         System.out.println('\n' + "Aeroporto não encontrado!");
@@ -151,7 +149,7 @@ public class Main {
                     Integer novaQtdPistas = sc.nextInt();
                     aeroporto.setQtdPistas(novaQtdPistas);
                     try {
-                        aeroportoAppService.altera(aeroporto);
+                        aeroAppService.altera(aeroporto);
                         System.out.println('\n' + "Alteração de quantidade de pistas realizada com sucesso!");
                     } catch (NoResultException e) {
                         System.out.println('\n' + "Aeroporto não encontrado!");
@@ -162,7 +160,7 @@ public class Main {
                     Integer novaQtdCompanhias = sc.nextInt();
                     aeroporto.setQtdCompanhias(novaQtdCompanhias);
                     try {
-                        aeroportoAppService.altera(aeroporto);
+                        aeroAppService.altera(aeroporto);
                         System.out.println('\n' + "Alteração de quantidade de companhias aéreas realizada com sucesso!");
                     } catch (NoResultException e) {
                         System.out.println('\n' + "Aeroporto não encontrado!");
@@ -178,17 +176,15 @@ public class Main {
         }
     }
 
-    private static void excluiAeroporto(AeroportoAppService aeroportoAppService) {
+    private static void excluiAeroporto(AeroportoAppService aeroAppService) {
         Scanner sc = new Scanner(System.in);
         String codigo;
-        Aeroporto aeroporto;
 
         System.out.print("Informe o código do aeroporto que gostaria de deletar: ");
         codigo = sc.nextLine();
 
         try {
-            aeroporto = aeroportoAppService.recuperaAeroporto(codigo);
-            aeroportoAppService.deleta(aeroporto);
+            aeroAppService.deleta(codigo);
             System.out.println('\n' + "Aeroporto de código " + codigo + " removido com sucesso!");
         }
         catch(NoResultException e) {
@@ -198,7 +194,7 @@ public class Main {
         }
     }
 
-    private static void buscaAeroporto(AeroportoAppService aeroportoAppService) {
+    private static void buscaAeroporto(AeroportoAppService aeroAppService) {
         Scanner sc = new Scanner(System.in);
         String codigo;
         Aeroporto aeroporto;
@@ -208,7 +204,7 @@ public class Main {
         codigo = sc.nextLine();
 
         try {
-            aeroporto = aeroportoAppService.recuperaAeroporto(codigo);
+            aeroporto = aeroAppService.recuperaAeroporto(codigo);
             System.out.println('\n' +
                     "Id: " + aeroporto.getId() +
                     " | IATA: " + aeroporto.getCodigo() +
@@ -220,6 +216,7 @@ public class Main {
             System.out.print('\n' + "Você gostaria de adicionar ou visualizar os terminais desse aeroporto? ");
             System.out.println('\n' + "1. Adicionar um terminal");
             System.out.println("2. Visualizar todos os terminais");
+            System.out.println("Digite qualquer outro número para voltar ao menu principal");
             System.out.print("Escolha sua opção: ");
             terminalOpts = Integer.parseInt(sc.nextLine());
 
@@ -235,10 +232,10 @@ public class Main {
 
                 Terminal terminal = new Terminal(numTerminal, aeroporto, qtdLojas);
 
-                aeroportoAppService.adicionaTerminal(terminal);
+                aeroAppService.adicionaTerminal(terminal);
             }
             else if(terminalOpts == 2) {
-                List<Terminal> terminais = aeroportoAppService.recuperaTerminais(aeroporto);
+                List<Terminal> terminais = aeroAppService.recuperaTerminais(aeroporto);
 
                 if(terminais.isEmpty()) {
                     System.out.println('\n' + "Nenhum terminal encontrado!");
@@ -262,8 +259,8 @@ public class Main {
         }
     }
 
-    private static void imprimeAeroportos(AeroportoAppService aeroportoAppService) {
-        List<Aeroporto> aeroportos = aeroportoAppService.recuperaAeroportos();
+    private static void imprimeAeroportos(AeroportoAppService aeroAppService) {
+        List<Aeroporto> aeroportos = aeroAppService.recuperaAeroportos();
 
         if(aeroportos.isEmpty()) {
             System.out.println('\n' + "Nenhum aeroporto encontrado!");

@@ -15,7 +15,7 @@
 
 
     <bean id="aeroportoAppService" class="com.rodrigobarroso.servico.impl.AeroportoAppServiceImpl"/>
-    <bean id="aeroportoDAO" class="com.rodrigobarroso.dao.JPAAeroportoDAO"/>
+    <bean id="aeroportoDAO" class="com.rodrigobarroso.dao.impl.AeroportoDaoImpl"/>
 
     <!--
         No exercício 9, sem o uso do DAO genérico, na  linha abaixo o nome do package informado

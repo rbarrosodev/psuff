@@ -1,5 +1,6 @@
-package com.rodrigobarroso.dao;
+package com.rodrigobarroso.dao.impl;
 
+import com.rodrigobarroso.dao.TerminalDAO;
 import com.rodrigobarroso.models.Aeroporto;
 import com.rodrigobarroso.models.Terminal;
 import org.hibernate.Session;
@@ -10,7 +11,8 @@ import org.hibernate.cfg.Configuration;
 import javax.persistence.Query;
 import java.util.List;
 
-public class JPATerminalDAO implements TerminalDAO {
+public class TerminalDaoImpl implements TerminalDAO {
+
     @Override
     public void adiciona(Terminal terminal) {
         Configuration config = new Configuration().configure();
@@ -27,8 +29,9 @@ public class JPATerminalDAO implements TerminalDAO {
         }
     }
 
-    public List<Terminal> recuperaTerminaisPorAeroporto(Aeroporto aero) {
-        String hql = String.format("SELECT t from Terminal t where t.aeroporto.id = %s", aero.getId());
+    @Override
+    public List<Terminal> recuperaTerminaisPorAeroporto(Aeroporto aeroporto) {
+        String hql = String.format("SELECT t from Terminal t where t.aeroporto.id = %s", aeroporto.getId());
 
         System.out.println(hql);
 

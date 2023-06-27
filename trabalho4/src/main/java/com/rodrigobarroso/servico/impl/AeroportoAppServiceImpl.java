@@ -1,52 +1,46 @@
 package com.rodrigobarroso.servico.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.rodrigobarroso.anotacao.Autowired;
+import com.rodrigobarroso.anotacao.Transactional;
 import com.rodrigobarroso.dao.AeroportoDAO;
-import com.rodrigobarroso.dao.TerminalDAO;
-import com.rodrigobarroso.util.AeroportoNotFoundException;
 import com.rodrigobarroso.models.Aeroporto;
-import com.rodrigobarroso.servico.AeroportoAppService;
-
-import com.rodrigobarroso.dao.JPATerminalDAO;
 import com.rodrigobarroso.models.Terminal;
+import com.rodrigobarroso.servico.AeroportoAppService;
+import com.rodrigobarroso.util.AeroportoNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import javax.persistence.Query;
+import java.util.List;
 
 public class AeroportoAppServiceImpl implements AeroportoAppService {
-
     @Autowired
     private AeroportoDAO aeroportoDAO;
+    // aeroportoDAO agora é uma variável de instância, para respeitar a maneira que o Spring trabalha.
+    // A FabricaDeServico que cria o proxy de serviço procura por campos com a anotação Autowired, verificando
+    // o tipo da variável, e automaticamente injeta em aeroportoDAO um objeto de uma classe que implementará
+    // a interface de AeroportoDAO.
 
     @Transactional
     public void adiciona(Aeroporto aeroporto) {
         aeroportoDAO.adiciona(aeroporto);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = { AeroportoNotFoundException.class })
     public void altera(Aeroporto aeroporto) throws AeroportoNotFoundException {
         try {
-
             aeroportoDAO.altera(aeroporto);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-
     @Transactional
-    public void deleta(Aeroporto aeroporto) throws AeroportoNotFoundException {
+    public void deleta(String codigoAero) throws AeroportoNotFoundException {
         try {
-            Aeroporto aero = aeroportoDAO.recuperaAeroporto(aeroporto.getCodigo());
-
-            if (aero != null) {
-                aeroportoDAO.deleta(aeroporto);
+            if (codigoAero != null) {
+                aeroportoDAO.deleta(codigoAero);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -69,13 +63,11 @@ public class AeroportoAppServiceImpl implements AeroportoAppService {
 
 
     public void adicionaTerminal(Terminal terminal) {
-        TerminalDAO terminalDAO = new JPATerminalDAO();
-        terminalDAO.adiciona(terminal);
+
     }
 
     public List<Terminal> recuperaTerminais(Aeroporto aeroporto) {
-        TerminalDAO terminalDAO = new JPATerminalDAO();
-        return terminalDAO.recuperaTerminaisPorAeroporto(aeroporto);
+        return null;
     }
 
     public List<Aeroporto> recuperaAeroportos() {

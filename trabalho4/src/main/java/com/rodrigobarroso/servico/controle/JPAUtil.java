@@ -8,12 +8,14 @@ import com.rodrigobarroso.util.InfraestruturaException;
 
 public class JPAUtil {
     private static EntityManagerFactory emf;
+
+    private static JPAUtil jpaUtil;
     private static final ThreadLocal<EntityManager> threadEntityManager = new ThreadLocal<EntityManager>();
     private static final ThreadLocal<EntityTransaction> threadTransaction = new ThreadLocal<EntityTransaction>();
 
-    static {
+    private JPAUtil() {
         try {
-            emf = Persistence.createEntityManagerFactory("exercicio");
+            emf = Persistence.createEntityManagerFactory("trabalho4");
         } catch (Throwable e) {
             e.printStackTrace();
             System.out.println(">>>>>>>>>> Mensagem de erro: " + e.getMessage());
@@ -31,28 +33,30 @@ public class JPAUtil {
                 tx = getEntityManager().getTransaction();
                 tx.begin();
                 threadTransaction.set(tx);
-                // System.out.println("Criou transacao");
-            } else { // System.out.println("Nao criou transacao");
             }
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex) {
             throw new InfraestruturaException(ex);
         }
     }
 
     public static EntityManager getEntityManager() {
-
-        EntityManager s = threadEntityManager.get();
+        EntityManager entManager;
         // Abre uma nova Sessão, se a thread ainda não possui uma.
         try {
-            if (s == null) {
-                s = emf.createEntityManager();
-                threadEntityManager.set(s);
-                // System.out.println("criou sessao");
+            if (jpaUtil == null) {
+                jpaUtil = new JPAUtil();
             }
-        } catch (RuntimeException ex) {
+            entManager = threadEntityManager.get();
+            if (entManager == null) {
+                entManager = emf.createEntityManager();
+                threadEntityManager.set(entManager);
+            }
+        }
+        catch (RuntimeException ex) {
             throw new InfraestruturaException(ex);
         }
-        return s;
+        return entManager;
     }
 
     public static void commitTransaction() {
@@ -63,13 +67,13 @@ public class JPAUtil {
         try {
             if (tx != null && tx.isActive()) {
                 tx.commit();
-                // System.out.println("Comitou transacao");
             }
             threadTransaction.set(null);
         } catch (RuntimeException ex) {
             try {
                 rollbackTransaction();
-            } catch (RuntimeException e) {
+            }
+            catch (RuntimeException ignored) {
             }
 
             throw new InfraestruturaException(ex);
@@ -100,10 +104,10 @@ public class JPAUtil {
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> Vai fechar o entity manager");
 
         try {
-            EntityManager s = threadEntityManager.get();
+            EntityManager entManager = threadEntityManager.get();
             threadEntityManager.set(null);
-            if (s != null && s.isOpen()) {
-                s.close();
+            if (entManager != null && entManager.isOpen()) {
+                entManager.close();
                 // System.out.println("Fechou a sessão");
             }
 

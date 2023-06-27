@@ -12,6 +12,10 @@ public class AeroportoNotFoundException extends Exception {
         this.codigo = codigo;
     }
 
+    public AeroportoNotFoundException() {
+
+    }
+
     public String getCodigoDeErro() {
         return codigo;
     }

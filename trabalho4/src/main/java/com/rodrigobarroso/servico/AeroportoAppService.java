@@ -11,7 +11,7 @@ public interface AeroportoAppService {
 
     void altera(Aeroporto aeroporto) throws AeroportoNotFoundException;
 
-    void deleta(Aeroporto aeroporto) throws AeroportoNotFoundException;
+    void deleta(String aeroporto) throws AeroportoNotFoundException;
 
     void adicionaTerminal(Terminal terminal);
 

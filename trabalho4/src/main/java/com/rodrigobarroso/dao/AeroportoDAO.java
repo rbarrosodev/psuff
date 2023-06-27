@@ -8,7 +8,7 @@ import java.util.List;
 public interface AeroportoDAO {
     void adiciona(Aeroporto aeroporto);
     void altera(Aeroporto aeroporto);
-    void deleta(Aeroporto aeroporto);
+    void deleta(String codigoAeroporto);
     void adicionaTerminal(Terminal terminal);
 
     Aeroporto recuperaAeroporto(String codigo);

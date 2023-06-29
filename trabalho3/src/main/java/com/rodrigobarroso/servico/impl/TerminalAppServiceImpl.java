@@ -1,12 +1,11 @@
 package com.rodrigobarroso.servico.impl;
 
-import com.rodrigobarroso.dao.AeroportoDAO;
 import com.rodrigobarroso.dao.FabricaDeDAO;
 import com.rodrigobarroso.dao.TerminalDAO;
 import com.rodrigobarroso.models.Aeroporto;
 import com.rodrigobarroso.models.Terminal;
-import com.rodrigobarroso.servico.AeroportoAppService;
 import com.rodrigobarroso.servico.TerminalAppService;
+import com.rodrigobarroso.util.JPAUtil;
 
 import java.util.List;
 
@@ -29,7 +28,10 @@ public class TerminalAppServiceImpl implements TerminalAppService {
 
     @Override
     public void adiciona(Terminal terminal) {
+        JPAUtil.beginTransaction();
         terminalDAO.adiciona(terminal);
+        JPAUtil.commitTransaction();
+        JPAUtil.closeEntityManager();
     }
 
     @Override

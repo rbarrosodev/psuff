@@ -4,14 +4,19 @@ import com.rodrigobarroso.models.Aeroporto;
 import com.rodrigobarroso.models.Terminal;
 import com.rodrigobarroso.servico.AeroportoAppService;
 import com.rodrigobarroso.servico.impl.AeroportoAppServiceImpl;
-import com.rodrigobarroso.util.AeroportoNotFoundException;
+import com.rodrigobarroso.excecao.AirportNotFoundException;
 import org.hibernate.exception.ConstraintViolationException;
-import javax.persistence.NoResultException;
+import jakarta.persistence.NoResultException;
 import java.util.List;
 import java.util.Scanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Main {
     public static void main(String[] args) {
+//        Logger logger = LoggerFactory.getLogger(Main.class);
+//        logger.error("Mensagem de log emitida utilizando o LOG4J");
+//        fatal - error - warning - info - debug
 
         AeroportoAppService aeroportoAppService = AeroportoAppServiceImpl.getInstance();
         Scanner sc = new Scanner(System.in);
@@ -170,7 +175,7 @@ public class Main {
         }
         catch(NoResultException e) {
             System.out.println('\n' + "Aeroporto não encontrado!");
-        } catch (AeroportoNotFoundException e) {
+        } catch (AirportNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -190,7 +195,7 @@ public class Main {
         }
         catch(NoResultException e) {
             System.out.println('\n' + "Aeroporto não encontrado!");
-        } catch (AeroportoNotFoundException e) {
+        } catch (AirportNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -255,7 +260,7 @@ public class Main {
         }
         catch(NoResultException e) {
             System.out.println('\n' + "Aeroporto não encontrado!");
-        } catch (AeroportoNotFoundException e) {
+        } catch (AirportNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

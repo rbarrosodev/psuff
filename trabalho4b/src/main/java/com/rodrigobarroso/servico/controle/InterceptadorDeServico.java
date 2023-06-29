@@ -1,6 +1,7 @@
 package com.rodrigobarroso.servico.controle;
 
 import com.rodrigobarroso.anotacao.Transactional;
+import com.rodrigobarroso.util.JPAUtil;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 

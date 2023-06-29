@@ -1,29 +1,42 @@
 package com.rodrigobarroso.dao.impl;
 
+import com.rodrigobarroso.anotacao.Autowired;
 import com.rodrigobarroso.anotacao.PersistenceContext;
 import com.rodrigobarroso.dao.AeroportoDAO;
 import com.rodrigobarroso.models.Aeroporto;
 import com.rodrigobarroso.models.Terminal;
-import com.rodrigobarroso.util.AeroportoNotFoundException;
-import com.rodrigobarroso.util.InfraestruturaException;
+import com.rodrigobarroso.excecao.AirportNotFoundException;
+import com.rodrigobarroso.excecao.InfrastructureException;
 
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.TypedQuery;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.TypedQuery;
 import java.util.List;
 
 public class AeroportoDaoImpl implements AeroportoDAO {
-    @PersistenceContext
+    @Autowired
     protected EntityManager em;
     // A variável de instância 'em' de tipo EntityManager está anotada com a anotação @PersistenceContext
-    // No Trabalho 4A, só é criado um objeto de serviço para cada sessão de usuário.
+    // No Trabalho 4A, será criado um objeto dessa classe de serviço (exemplo AeroportoAppServiceImpl)
+    // para cada sessão de usuário.
+    // No Trabalho 4B, será criado para cada classe de serviço, um ÚNICO objeto dessa classe de serviço
+    // (exemplo AeroportoAppServiceImpl) para todos os usuários que estiverem interagindo com o projeto.
+    // No 4B, como esse único objeto de serviço vai referenciar o DAO abaixo, onde está definido a variável
+    // de instância 'em' (EntityManager), se utilizarmos a mesma implementação do 4A, quando o InterceptadorDeDAO
+    // para um determinado usuário atualizar o EntityManager para o EntityManager da thread corrente, todos
+    // os outros usuários utilizaram esse mesmo EntityManager, uma vez que na memória só existirá uma única
+    // instância do DAO onde está definido o EntityManager como dito acima.
 
+    public AeroportoDaoImpl() {
+    }
 
     public void adiciona(Aeroporto aeroporto) {
         try {
             em.persist(aeroporto);
-        } catch (RuntimeException e) {
-            throw new InfraestruturaException(e);
+        }
+        catch (RuntimeException e) {
+            throw new InfrastructureException(e);
         }
     }
 
@@ -33,37 +46,33 @@ public class AeroportoDaoImpl implements AeroportoDAO {
             Aeroporto aero = em.find(Aeroporto.class, aeroporto.getId(), LockModeType.PESSIMISTIC_WRITE);
 
             if (aero == null) {
-                throw new AeroportoNotFoundException();
+                throw new AirportNotFoundException();
             }
 
             em.merge(aeroporto);
         }
         catch (RuntimeException e) {
-            throw new InfraestruturaException(e);
-        } catch (AeroportoNotFoundException e) {
+            throw new InfrastructureException(e);
+        } catch (AirportNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
-
-    public void deleta(String codigoAero) {
+    public void deleta(Aeroporto aeroporto) throws AirportNotFoundException {
         try {
-            Aeroporto aeroporto = recuperaAeroporto(codigoAero);
-
             Aeroporto aero = em.find(Aeroporto.class, aeroporto.getId(), LockModeType.PESSIMISTIC_WRITE);
 
             if (aero == null) {
-                throw new AeroportoNotFoundException();
+                throw new AirportNotFoundException();
             }
 
             em.remove(aeroporto);
         }
         catch (RuntimeException e) {
-            throw new InfraestruturaException(e);
-        } catch (AeroportoNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new InfrastructureException(e);
         }
     }
+
 
     public Aeroporto recuperaAeroporto(String codigo) {
         try {
@@ -78,14 +87,14 @@ public class AeroportoDaoImpl implements AeroportoDAO {
             }
 
             if (aero == null) {
-                throw new AeroportoNotFoundException();
+                throw new AirportNotFoundException();
             }
 
             return aero;
         }
         catch (RuntimeException e) {
-            throw new InfraestruturaException(e);
-        } catch (AeroportoNotFoundException e) {
+            throw new InfrastructureException(e);
+        } catch (AirportNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -95,7 +104,7 @@ public class AeroportoDaoImpl implements AeroportoDAO {
             return em.createQuery("SELECT a from Aeroporto a order by a.id asc", Aeroporto.class).getResultList();
         }
         catch (RuntimeException e) {
-            throw new InfraestruturaException(e);
+            throw new InfrastructureException(e);
         }
     }
 

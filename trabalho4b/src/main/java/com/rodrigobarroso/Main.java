@@ -4,10 +4,10 @@ import com.rodrigobarroso.models.Aeroporto;
 import com.rodrigobarroso.models.Terminal;
 import com.rodrigobarroso.servico.AeroportoAppService;
 import com.rodrigobarroso.servico.controle.FabricaDeServico;
-import com.rodrigobarroso.util.AeroportoNotFoundException;
+import com.rodrigobarroso.excecao.AirportNotFoundException;
 import org.hibernate.exception.ConstraintViolationException;
 
-import javax.persistence.NoResultException;
+import jakarta.persistence.NoResultException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -171,7 +171,7 @@ public class Main {
         }
         catch(NoResultException e) {
             System.out.println('\n' + "Aeroporto não encontrado!");
-        } catch (AeroportoNotFoundException e) {
+        } catch (AirportNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -179,17 +179,19 @@ public class Main {
     private static void excluiAeroporto(AeroportoAppService aeroAppService) {
         Scanner sc = new Scanner(System.in);
         String codigo;
+        Aeroporto aeroporto;
 
         System.out.print("Informe o código do aeroporto que gostaria de deletar: ");
         codigo = sc.nextLine();
 
         try {
-            aeroAppService.deleta(codigo);
+            aeroporto = aeroAppService.recuperaAeroporto(codigo);
+            aeroAppService.deleta(aeroporto);
             System.out.println('\n' + "Aeroporto de código " + codigo + " removido com sucesso!");
         }
         catch(NoResultException e) {
             System.out.println('\n' + "Aeroporto não encontrado!");
-        } catch (AeroportoNotFoundException e) {
+        } catch (AirportNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -254,7 +256,7 @@ public class Main {
         }
         catch(NoResultException e) {
             System.out.println('\n' + "Aeroporto não encontrado!");
-        } catch (AeroportoNotFoundException e) {
+        } catch (AirportNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

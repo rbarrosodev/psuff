@@ -13,7 +13,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
         AeroportoAppService aeroportoAppService = FabricaDeServico.getServico(AeroportoAppService.class);
         Scanner sc = new Scanner(System.in);
         int options;

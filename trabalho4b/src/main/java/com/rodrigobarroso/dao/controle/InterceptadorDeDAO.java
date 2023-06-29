@@ -1,12 +1,12 @@
 package com.rodrigobarroso.dao.controle;
 
-import com.rodrigobarroso.anotacao.PersistenceContext;
-import com.rodrigobarroso.servico.controle.JPAUtil;
-import org.springframework.cglib.proxy.MethodInterceptor;
-import org.springframework.cglib.proxy.MethodProxy;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import com.rodrigobarroso.anotacao.PersistenceContext;
+import com.rodrigobarroso.util.JPAUtil;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
 
 public class InterceptadorDeDAO implements MethodInterceptor {
     /*

@@ -1,6 +1,6 @@
 package com.rodrigobarroso.models;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name="portao")

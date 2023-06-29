@@ -1,9 +1,10 @@
 package com.rodrigobarroso.dao.controle;
 
-import com.rodrigobarroso.servico.controle.InterceptadorDeServico;
-import org.springframework.cglib.proxy.Enhancer;
+import com.rodrigobarroso.anotacao.Autowired;
+import com.rodrigobarroso.em.controller.FabricaDeEntityManager;
 import org.reflections.Reflections;
 
+import java.lang.reflect.Field;
 import java.util.Set;
 
 public class FabricaDeDAO {
@@ -27,32 +28,58 @@ public class FabricaDeDAO {
         // Aqui é recuperado o Class da classe que implementa a interface que foi passada no parâmetro 'tipo'.
         // Nesse caso, de AeroportoDAO.
 
+        try {
+            T instance = tipo.cast(classe.getDeclaredConstructor().newInstance());
+            // Aqui teremos a instanciação da Class da classe que implementa a interface
+            // passada no parâmetro 'tipo' (nesse caso AeroportoDAO).
+            // O método getDeclaredConstructor() chamado no objeto 'classe' irá retornar
+            // um objeto do tipo Constructor, que será o próprio construtor da Classe representada
+            // pelo objeto 'classe'. Após esse método, é chamado o método newInstance(), que tem
+            // como objetivo invocar o construtor obtido anteriormente, que irá gerar e retornar
+            // uma nova instância da Class do objeto 'classe'. Além disso, é feito um cast desse novo
+            // objeto utilizando o objeto 'tipo', em outras palavras, essa nova instância será convertida
+            // para o Tipo (Class) do objeto 'tipo'.
+            // Finalmente, o resultado desse cast é atribuido a variável 'instance', que terá o tipo 'T'
+            // genérico, que após a atribuição, terá o mesmo Tipo (Class) do objeto 'tipo'.
 
-        return tipo.cast(Enhancer.create(classe, new InterceptadorDeDAO()));
-        // Por fim, aqui é retornado o proxy utilizando a classe Enhancer da biblioteca cglib,
-        // essa classe é utilizada para gerar proxies dinâmicos em tempo de execução.
-        // Nesse caso, é utilizado o método create() passando 2 argumentos.
-        // O primeiro argumento 'classe' representa a classe que o proxy vai implementar,
-        // então nesse caso, o proxy terá o mesmo tipo dessa classe.
-        // O segundo argumento, é passado uma instância de InterceptadorDeDAO(),
-        // que será usado como o interceptador desse proxy.
-        // Por fim, o método cast() é utilizado para fazer o cast do proxy para o tipo
-        // do parâmetro 'tipo', e então é feito o return.
+            Field[] campos = instance.getClass().getDeclaredFields();
+            // O método getDeclaredFields() retorna um array de campos do tipo Field,
+            // que podem ser públicos, protegidos, default e privados. Esse array irá
+            // conter entre os objetos retornados, o campo com a anotação @Autowired.
+            // Nesse caso, estamos atrás dos campos declarados da Classe do objeto 'instance'
+            // portanto, é necessário utilizar o método getClass() antes, para que seja retornado
+            // a Classe do objeto 'instance' e assim possamos retornar após os campos dessa Classe.
+
+
+            // O For abaixo é utilizado para percorrer o array 'campos' em busca do campo com anotação @Autowired,
+            // e quando encontrar, injetar nesse objeto a inicialização utilizando o getEntityManager()
+            // da FabricaDeEntityManager.
+            for (Field campo : campos) {
+                if (campo.isAnnotationPresent(Autowired.class)) {
+                    // isAnnotationPresent(Autowired.class) é o método utilizado para retornar se o campo em questão
+                    // está ou não anotado com uma anotação, nesse caso, @Autowired.
+                    campo.setAccessible(true);
+                    // setAccessible(true) impede que um IllegalAccessException seja lançado mais abaixo, pois essa
+                    // poderá ocorrer se um campo privado tentar ser acessado, assim com o método acima, dizemos
+                    // que o campo está acessível mesmo sendo privado.
+                    campo.set(instance, FabricaDeEntityManager.getEntityManager());
+                    // Aqui é feito a atribuição ao campo com anotação @Autowired utilizando o valor
+                    // de FabricaDeEntityManager.getEntityManager(), e para isso, é utilizado o método set().
+                    // O método set irá passar no campo (objeto com anotação @Autowired) 2 argumentos.
+                    // O primeiro argumento será o objeto corrente no momento, ou seja, o proxy, que nesse
+                    // caso será o objeto 'instance'.
+                    // O segundo argumento é o valor que será injetado nesse campo, ou seja, o resultado de
+                    // FabricaDeEntityManager.getEntityManager().
+                    // Portanto, estamos atribuindo a campo, com objeto corrente instance, o valor de
+                    // FabricaDeEntityManager.getEntityManager()).
+                }
+            }
+
+            return instance;
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
-}
 
-//        try {
-//            dao = (T) classe.newInstance();
-//            // Aqui é utilizado a var classe (um obj do tipo Class) para poder instanciar
-//            // um objeto do tipo DAOImpl (AeroportoDaoImpl por exemplo).
-//        }
-//        catch (InstantiationException | IllegalAccessException e) {
-//            // InstantiationException é uma exceção que seria lançada caso fosse tentado
-//            // instanciar uma interface em newInstance(), e IllegalAccessException seria
-//            // lançado se o construtor do obj de tipo DAOImpl (AeroportoDaoImpl) fosse
-//            // privado.
-//            System.out.println("Não foi possível criar um objeto do tipo " + classe.getName());
-//            throw new RuntimeException(e);
-//        }
-//
-//        return dao;
+}

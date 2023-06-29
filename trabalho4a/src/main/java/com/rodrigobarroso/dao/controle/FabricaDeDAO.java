@@ -36,19 +36,3 @@ public class FabricaDeDAO {
         // do parâmetro 'tipo', e então é feito o return.
     }
 }
-
-//        try {
-//            dao = (T) classe.newInstance();
-//            // Aqui é utilizado a var classe (um obj do tipo Class) para poder instanciar
-//            // um objeto do tipo DAOImpl (AeroportoDaoImpl por exemplo).
-//        }
-//        catch (InstantiationException | IllegalAccessException e) {
-//            // InstantiationException é uma exceção que seria lançada caso fosse tentado
-//            // instanciar uma interface em newInstance(), e IllegalAccessException seria
-//            // lançado se o construtor do obj de tipo DAOImpl (AeroportoDaoImpl) fosse
-//            // privado.
-//            System.out.println("Não foi possível criar um objeto do tipo " + classe.getName());
-//            throw new RuntimeException(e);
-//        }
-//
-//        return dao;

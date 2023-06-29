@@ -6,17 +6,27 @@ import com.rodrigobarroso.dao.AeroportoDAO;
 import com.rodrigobarroso.models.Aeroporto;
 import com.rodrigobarroso.models.Terminal;
 import com.rodrigobarroso.servico.AeroportoAppService;
-import com.rodrigobarroso.util.AeroportoNotFoundException;
+import com.rodrigobarroso.excecao.AirportNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 import java.util.List;
 
 public class AeroportoAppServiceImpl implements AeroportoAppService {
+    // No Trabalho 4A, será criado um objeto dessa classe de serviço (exemplo AeroportoAppServiceImpl)
+    // para cada sessão de usuário.
+    // No Trabalho 4B, será criado para cada classe de serviço, um ÚNICO objeto dessa classe de serviço
+    // (exemplo AeroportoAppServiceImpl) para todos os usuários que estiverem interagindo com o projeto.
+    // No 4B, como esse único objeto de serviço vai referenciar o DAO abaixo, onde está definido a variável
+    // de instância 'em' (EntityManager), se utilizarmos a mesma implementação do 4A, quando o InterceptadorDeDAO
+    // para um determinado usuário atualizar o EntityManager para o EntityManager da thread corrente, todos
+    // os outros usuários utilizaram esse mesmo EntityManager, uma vez que na memória só existirá uma única
+    // instância do DAO onde está definido o EntityManager como dito acima.
+
     @Autowired
-    private AeroportoDAO aeroportoDAO;
+    protected AeroportoDAO aeroportoDAO;
     // Foi alterado a forma como o valor de aeroportoDAO é injetado, agora ela é uma variável de instância,
     // para que sua implementação fique igual como a maneira que o Spring trabalha. (No Spring, o DAO é uma variável
     // de instância).
@@ -36,8 +46,8 @@ public class AeroportoAppServiceImpl implements AeroportoAppService {
         aeroportoDAO.adiciona(aeroporto);
     }
 
-    @Transactional(rollbackFor = { AeroportoNotFoundException.class })
-    public void altera(Aeroporto aeroporto) throws AeroportoNotFoundException {
+    @Transactional(rollbackFor = { AirportNotFoundException.class })
+    public void altera(Aeroporto aeroporto) {
         try {
             aeroportoDAO.altera(aeroporto);
         } catch (Exception e) {
@@ -46,11 +56,9 @@ public class AeroportoAppServiceImpl implements AeroportoAppService {
     }
 
     @Transactional
-    public void deleta(String codigoAero) throws AeroportoNotFoundException {
+    public void deleta(Aeroporto aeroporto) {
         try {
-            if (codigoAero != null) {
-                aeroportoDAO.deleta(codigoAero);
-            }
+            aeroportoDAO.deleta(aeroporto);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

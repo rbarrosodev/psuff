@@ -5,8 +5,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-
-import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,25 +21,26 @@ public class JPAUtil {
     }
 
     public static void beginTransaction() {
-        // tenta pegar a transação atual do thread corrente
+        // Tenta pegar a transação atual do thread corrente
         EntityTransaction transaction = threadTransaction.get();
 
-        // tenta pegar a quantidade de "transações" abertas que existem no thread corrente
+        // Tenta pegar a quantidade de "transações" abertas que existem no thread corrente
         // Só vai existir no máximo uma transação em aberto no thread atual, porem utilizamos essa variavel para saber quantas vezes foram pedidos para abrir uma transação.
         // Pois usaremos ela para saber qual é o momento certo de fechar a transação,
         // já que no momento em que formos fechar a transação só podemos fechar ela se essa for a transação mais externa,
         // ou seja, a primeira transação, a que realmente foi aberta.
         Integer transactionCount = threadTransactionCount.get();
+        // System.out.println("Valor da thread TransactionCount no início de beginTransaction: " + transactionCount);
 
         // Se não existir transações, ou seja, se for a primeira transação
         // então deve ser aberto uma transação e o valor da transaçãoCount deve ser setada como 1
         if (transaction == null) {
             try {
-                transaction = getEntityManager().getTransaction(); // pega a transação do entity manager
-                transaction.begin(); // inicia a transação
-                transactionCount = 1; // seta a transaçãoCount como 1
-                threadTransactionCount.set(transactionCount); // setando a transaçãoCount no thread atual
-                threadTransaction.set(transaction); // setando a transação no thread atual
+                transaction = getEntityManager().getTransaction(); // Pega a transação do entity manager
+                transaction.begin(); // Inicia a transação
+                transactionCount = 1; // Seta a transaçãoCount como 1
+                threadTransactionCount.set(transactionCount); // Setando a transaçãoCount no thread atual
+                threadTransaction.set(transaction); // Setando a transação no thread atual
                 logger.info(">>>> Criou a transação");
             }
             catch (RuntimeException ex) {
@@ -51,8 +50,10 @@ public class JPAUtil {
         // Se já existir uma transação, então deve ser incrementado o valor da transaçãoCount
         else {
             transactionCount++;
-            threadTransactionCount.set(transactionCount); // setando a transaçãoCount no thread atual
+            threadTransactionCount.set(transactionCount); // Setando a transaçãoCount no thread atual
         }
+
+        // System.out.println("Valor da thread TransactionCount no final de beginTransaction: " + transactionCount);
     }
 
     public static EntityManager getEntityManager() {
@@ -63,7 +64,7 @@ public class JPAUtil {
             if (jpaUtil == null) {
                 jpaUtil = new JPAUtil();
             }
-            entityManager = threadEntityManager.get(); // pega o EntityManager do thread atual
+            entityManager = threadEntityManager.get(); // Pega o EntityManager do thread atual
 
             // Se não existir um EntityManager no thread atual, então deve ser criado um novo e setado no thread atual
             if (entityManager == null) {
@@ -83,18 +84,20 @@ public class JPAUtil {
         EntityTransaction transaction = threadTransaction.get();
         Integer transactionCount = threadTransactionCount.get();
 
+        // System.out.println("Valor da thread TransactionCount no início de commitTransaction: " + transactionCount);
+
         try {
-            // verifica se existe uma transação e se ela está ativa (commit ou fechada...)
+            // Verifica se existe uma transação e se ela está ativa (commit ou fechada...)
             if (transaction != null && transaction.isActive()) {
-                // como foi chamadao o método commitTransaction, então a quantidade de transações foi decrementada
+                // Como foi chamado o método commitTransaction, então a quantidade de transações foi decrementada
                 transactionCount--;
 
                 // Se a quantidade for igual a 0, então esse é o último commitTransaction que será chamado
                 // logo deve realmente commitar, por não ter nenhum outro commit que será chamado
                 if (transactionCount == 0) {
-                    transaction.commit(); // commita a transação
-                    threadTransaction.set(null); // remove a transação da thread
-                    threadTransactionCount.set(null); // remove a transaçãoCount da thread
+                    transaction.commit(); // Commita a transação
+                    threadTransaction.set(null); // Remove a transação da thread
+                    threadTransactionCount.set(null); // Remove a transaçãoCount da thread
                     logger.info(">>>> Comitou a transação");
                 }
                 // Se a quantidade for diferente de 0, então esse não é o último commitTransaction que será chamado
@@ -112,13 +115,17 @@ public class JPAUtil {
             }
             throw new InfrastructureException(exception);
         }
+
+        // System.out.println("Valor da thread TransactionCount no final de commitTransaction: " + transactionCount);
     }
 
     public static void rollbackTransaction() {
         EntityTransaction transaction = threadTransaction.get();
 
+        // System.out.println("Valor da thread TransactionCount no início de rollbackTransaction: " + threadTransactionCount);
+
         try {
-            // pega a transação da thread corrente
+            // Pega a transação da thread corrente
             // se ela existir e tiver ativa, ele realiza o rollback
             threadTransaction.set(null);
             threadTransactionCount.set(null);
@@ -133,11 +140,15 @@ public class JPAUtil {
         finally {
             closeEntityManager();
         }
+
+        // System.out.println("Valor da thread TransactionCount no final de rollbackTransaction: " + threadTransactionCount);
     }
 
     public static void closeEntityManager() {
         EntityTransaction transaction = threadTransaction.get();
         Integer transactionCount = threadTransactionCount.get();
+
+        // System.out.println("Valor da thread TransactionCount no inicio do close EM: " + transactionCount);
 
         // O entityManager só pode ser fechado caso não tenha nenhuma transação em aberto no thread corrente
         if (transactionCount == null || transactionCount == 0) {
@@ -162,5 +173,6 @@ public class JPAUtil {
                 throw new InfrastructureException(ex);
             }
         }
+        // System.out.println("Valor da thread TransactionCount no final do close EM: " + transactionCount);
     }
 }

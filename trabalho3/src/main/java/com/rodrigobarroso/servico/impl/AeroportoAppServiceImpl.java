@@ -50,7 +50,6 @@ public class AeroportoAppServiceImpl implements AeroportoAppService {
 
         JPAUtil.commitTransaction();
         JPAUtil.closeEntityManager();
-        aeroportoDAO.recuperaAeroporto(aeroporto.getCodigo());
     }
 
 

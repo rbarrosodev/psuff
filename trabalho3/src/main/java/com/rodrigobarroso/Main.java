@@ -5,6 +5,7 @@ import com.rodrigobarroso.models.Terminal;
 import com.rodrigobarroso.servico.AeroportoAppService;
 import com.rodrigobarroso.servico.impl.AeroportoAppServiceImpl;
 import com.rodrigobarroso.excecao.AirportNotFoundException;
+import com.rodrigobarroso.util.JPAUtil;
 import org.hibernate.exception.ConstraintViolationException;
 import jakarta.persistence.NoResultException;
 import java.util.List;
@@ -170,7 +171,10 @@ public class Main {
                         System.out.println('\n' + "Aeroporto não encontrado!");
                     }
                 }
-                default -> System.out.println('\n' + "Opção inválida!");
+                default -> {
+                    JPAUtil.closeEntityManager();
+                    System.out.println('\n' + "Opção inválida! Voltando ao menu principal.");
+                }
             }
         }
         catch(NoResultException e) {
@@ -245,6 +249,7 @@ public class Main {
 
                 if(terminais.isEmpty()) {
                     System.out.println('\n' + "Nenhum terminal encontrado!");
+                    JPAUtil.closeEntityManager();
                 }
                 else {
                     for (Terminal terminal : terminais) {
@@ -254,9 +259,12 @@ public class Main {
                                 " | Aeroporto: " + terminal.getAeroporto().getCodigo() +
                                 " | Quantidade de Lojas: " + terminal.getQtdLojas());
                     }
+                    JPAUtil.closeEntityManager();
                 }
             }
-
+            else {
+                JPAUtil.closeEntityManager();
+            }
         }
         catch(NoResultException e) {
             System.out.println('\n' + "Aeroporto não encontrado!");
@@ -270,6 +278,7 @@ public class Main {
 
         if(aeroportos.isEmpty()) {
             System.out.println('\n' + "Nenhum aeroporto encontrado!");
+            JPAUtil.closeEntityManager();
         }
         else {
             for (Aeroporto aeroporto : aeroportos) {
@@ -283,6 +292,7 @@ public class Main {
                         '\n' +
                         " | Quantidade de Terminais: " + aeroporto.getTerminais().size());
             }
+            JPAUtil.closeEntityManager();
         }
     }
 }

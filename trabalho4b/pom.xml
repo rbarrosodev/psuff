@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.rodrigobarroso</groupId>
-    <artifactId>trabalho4</artifactId>
+    <artifactId>trabalho4b</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -24,20 +24,20 @@
 
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>5.0.8.RELEASE</version>
+            <artifactId>spring-core</artifactId>
+            <version>5.3.16</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
-            <version>5.0.8.RELEASE</version>
+            <version>5.3.16</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-            <version>5.0.8.RELEASE</version>
+            <version>5.3.16</version>
         </dependency>
 
         <dependency>

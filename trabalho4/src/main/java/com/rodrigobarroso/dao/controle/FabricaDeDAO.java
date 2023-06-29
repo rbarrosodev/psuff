@@ -25,6 +25,17 @@ public class FabricaDeDAO {
         // Nesse caso, de AeroportoDAO.
 
         return tipo.cast(Enhancer.create(classe, new InterceptadorDeDAO()));
+        // Por fim, aqui é retornado o proxy utilizando a classe Enhancer da biblioteca cglib,
+        // essa classe é utilizada para gerar proxies dinâmicos em tempo de execução.
+        // Nesse caso, é utilizado o método create() passando 2 argumentos.
+        // O primeiro argumento 'classe' representa a classe que o proxy vai implementar,
+        // então nesse caso, o proxy terá o mesmo tipo dessa classe.
+        // O segundo argumento, é passado uma instância de InterceptadorDeDAO(),
+        // que será usado como o interceptador desse proxy.
+        // Por fim, o método cast() é utilizado para fazer o cast do proxy para o tipo
+        // do parâmetro 'tipo', e então é feito o return.
+    }
+}
 
 //        try {
 //            dao = (T) classe.newInstance();
@@ -41,5 +52,3 @@ public class FabricaDeDAO {
 //        }
 //
 //        return dao;
-    }
-}

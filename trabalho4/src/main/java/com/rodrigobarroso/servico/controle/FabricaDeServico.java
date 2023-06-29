@@ -33,6 +33,15 @@ public class FabricaDeServico {
         // Nesse caso, de AeroportoAppService.
 
         T proxy = tipo.cast(Enhancer.create(classe, new InterceptadorDeServico()));
+        // Aqui é criado o proxy utilizando a classe Enhancer da biblioteca cglib,
+        // essa classe é utilizada para gerar proxies dinâmicos em tempo de execução.
+        // Para criar esse proxy, é utilizado o método create() passando 2 argumentos.
+        // O primeiro argumento 'classe' representa a classe que o proxy vai implementar,
+        // então nesse caso, o proxy terá o mesmo tipo dessa classe.
+        // O segundo argumento, é passado uma instância de InterceptadorDeServico(),
+        // que será usado como o interceptador desse proxy.
+        // Por fim, o método cast() é utilizado para fazer o cast do proxy para o tipo
+        // do parâmetro 'tipo', e depois atribuído a variável 'proxy'.
         // Após a criação do proxy acima, é necessário recuperar os campos do proxy,
         // mais especificamente o campo (nesse caso aeroportoDAO) da classe que o
         // proxy extende.

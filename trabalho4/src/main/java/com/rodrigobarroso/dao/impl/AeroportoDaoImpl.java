@@ -16,6 +16,8 @@ import java.util.List;
 public class AeroportoDaoImpl implements AeroportoDAO {
     @PersistenceContext
     protected EntityManager em;
+    // A variável de instância 'em' de tipo EntityManager está anotada com a anotação @PersistenceContext
+    // No Trabalho 4A, só é criado um objeto de serviço para cada sessão de usuário.
 
 
     public void adiciona(Aeroporto aeroporto) {

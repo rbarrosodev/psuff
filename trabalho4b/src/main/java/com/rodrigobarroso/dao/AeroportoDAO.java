@@ -10,7 +10,7 @@ import java.util.List;
 public interface AeroportoDAO {
     void adiciona(Aeroporto aeroporto);
     void altera(Aeroporto aeroporto) throws AirportNotFoundException, OutdatedEntityException;
-    void deleta(Aeroporto aeroporto) throws AirportNotFoundException;
+    void deleta(String codigoAeroporto) throws AirportNotFoundException;
     void adicionaTerminal(Terminal terminal);
 
     Aeroporto recuperaAeroporto(String codigo) throws AirportNotFoundException;

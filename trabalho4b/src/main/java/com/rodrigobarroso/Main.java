@@ -186,7 +186,7 @@ public class Main {
 
         try {
             aeroporto = aeroAppService.recuperaAeroporto(codigo);
-            aeroAppService.deleta(aeroporto);
+            aeroAppService.deleta(aeroporto.getCodigo());
             System.out.println('\n' + "Aeroporto de código " + codigo + " removido com sucesso!");
         }
         catch(NoResultException e) {

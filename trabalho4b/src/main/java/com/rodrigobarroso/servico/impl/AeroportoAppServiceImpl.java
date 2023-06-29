@@ -56,9 +56,11 @@ public class AeroportoAppServiceImpl implements AeroportoAppService {
     }
 
     @Transactional
-    public void deleta(Aeroporto aeroporto) {
+    public void deleta(String codigoAero) throws AirportNotFoundException {
         try {
-            aeroportoDAO.deleta(aeroporto);
+            if (codigoAero != null) {
+                aeroportoDAO.deleta(codigoAero);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

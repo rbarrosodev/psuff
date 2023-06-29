@@ -58,8 +58,11 @@ public class AeroportoDaoImpl implements AeroportoDAO {
         }
     }
 
-    public void deleta(Aeroporto aeroporto) throws AirportNotFoundException {
+    @Override
+    public void deleta(String codigoAero) {
         try {
+            Aeroporto aeroporto = recuperaAeroporto(codigoAero);
+
             Aeroporto aero = em.find(Aeroporto.class, aeroporto.getId(), LockModeType.PESSIMISTIC_WRITE);
 
             if (aero == null) {
@@ -70,6 +73,8 @@ public class AeroportoDaoImpl implements AeroportoDAO {
         }
         catch (RuntimeException e) {
             throw new InfrastructureException(e);
+        } catch (AirportNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 

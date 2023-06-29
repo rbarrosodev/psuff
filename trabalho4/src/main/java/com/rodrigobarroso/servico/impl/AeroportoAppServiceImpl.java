@@ -17,10 +17,19 @@ import java.util.List;
 public class AeroportoAppServiceImpl implements AeroportoAppService {
     @Autowired
     private AeroportoDAO aeroportoDAO;
-    // aeroportoDAO agora é uma variável de instância, para respeitar a maneira que o Spring trabalha.
-    // A FabricaDeServico que cria o proxy de serviço procura por campos com a anotação Autowired, verificando
-    // o tipo da variável, e automaticamente injeta em aeroportoDAO um objeto de uma classe que implementará
-    // a interface de AeroportoDAO.
+    // Foi alterado a forma como o valor de aeroportoDAO é injetado, agora ela é uma variável de instância,
+    // para que sua implementação fique igual como a maneira que o Spring trabalha. (No Spring, o DAO é uma variável
+    // de instância).
+    // [No final das contas, não faz diferença ela ser uma variável de instância ou estática pois só teremos um
+    // objeto do tipo AeroportoAppServiceImpl na memória].
+    // Para que o valor de AeroportoDaoImpl seja injetado, é necessário anotar a variável aeroportoDAO
+    // com a anotação @Autowired.
+    // A FabricaDeServico que cria o proxy de serviço, vai procurar por campos com a anotação @Autowired, verificando
+    // o tipo da variável [nesse caso AeroportoDAO], e automaticamente injeta em aeroportoDAO um objeto de uma classe
+    // que implementa a interface de AeroportoDAO.
+    // Em outras palavras, a FabricaDeServico é responsável por criar o proxy, ela que irá criar um objeto de uma
+    // classe que extende AeroportoAppServiceImpl, e quando ela criar esse objeto, ela irá injetar em aeroportoDAO
+    // o objeto do tipo AeroportoDaoImpl.
 
     @Transactional
     public void adiciona(Aeroporto aeroporto) {

@@ -7,6 +7,7 @@ import com.rodrigobarroso.models.Terminal;
 import com.rodrigobarroso.util.AeroportoNotFoundException;
 import com.rodrigobarroso.util.InfraestruturaException;
 
+
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.TypedQuery;

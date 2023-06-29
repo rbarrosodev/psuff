@@ -11,28 +11,27 @@ public class FabricaDeDAO {
         // a interface de aeroportoDAO (AeroportoDaoImpl), por exemplo.
 
         Set<Class<? extends T>> classes = reflections.getSubTypesOf(tipo);
-        // Recupera um Set de objetos do tipo Class que estendem T (aeroportoDAO por exemplo)
-        // e inicializa essa variável com os subtipos de aeroportoDAO.
+        // Recupera um Set de objetos do tipo Class que estendem T (nesse caso AeroportoDAO)
+        // e inicializa essa variável com os subtipos de AeroportoDAO.
 
         if (classes.size() > 1) {
             throw new RuntimeException("Somente uma classe pode implementar " + tipo.getName());
-            // Não pode existir mais de uma classe implementando um DAO (aeroportoDAO por exemplo).
+            // Caso haja mais de uma classe implementando a interface AeroportoDAO, será lançado
+            // um RuntimeException, pois somente uma classe pode implementar essa interface.
         }
 
         Class<?> classe = classes.iterator().next();
-        // A variável classe estará apontando para o objeto .class da classe que implementa
-        // a interface que foi passada em "tipo". Em outras palavras, aqui é recuperado
-        // o Class da classe implementa o aeroportoDAO, por exemplo.
+        // Aqui é recuperado o Class da classe que implementa a interface que foi passada no parâmetro 'tipo'.
+        // Nesse caso, de AeroportoDAO.
 
         return tipo.cast(Enhancer.create(classe, new InterceptadorDeDAO()));
-    }
-}
 
 //        try {
 //            dao = (T) classe.newInstance();
 //            // Aqui é utilizado a var classe (um obj do tipo Class) para poder instanciar
 //            // um objeto do tipo DAOImpl (AeroportoDaoImpl por exemplo).
-//        } catch (InstantiationException | IllegalAccessException e) {
+//        }
+//        catch (InstantiationException | IllegalAccessException e) {
 //            // InstantiationException é uma exceção que seria lançada caso fosse tentado
 //            // instanciar uma interface em newInstance(), e IllegalAccessException seria
 //            // lançado se o construtor do obj de tipo DAOImpl (AeroportoDaoImpl) fosse
@@ -42,3 +41,5 @@ public class FabricaDeDAO {
 //        }
 //
 //        return dao;
+    }
+}

@@ -2,13 +2,21 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="trabalho2" />
+        <module name="trabalho4a" />
+        <module name="trabalho4b" />
+        <module name="trabalho4" />
         <module name="trabalho3" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="trabalho3 (1)" target="17" />
+      <module name="trabalho3 (2)" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -5,5 +5,14 @@
     <file url="file://$PROJECT_DIR$/trabalho2/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/trabalho3/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/trabalho3/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/trabalho4/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/trabalho4/src/main/java/com/rodrigobarroso/anotacao/Autowired.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/trabalho4/src/main/java/com/rodrigobarroso/anotacao/Transactional.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/trabalho4/src/main/java/com/rodrigobarroso/dao/controle/FabricaDeDAOs.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/trabalho4/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/trabalho4a/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/trabalho4a/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/trabalho4b/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/trabalho4b/src/main/resources" charset="UTF-8" />
   </component>
 </project>

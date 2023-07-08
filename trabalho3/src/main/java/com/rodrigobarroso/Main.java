@@ -4,14 +4,20 @@ import com.rodrigobarroso.models.Aeroporto;
 import com.rodrigobarroso.models.Terminal;
 import com.rodrigobarroso.servico.AeroportoAppService;
 import com.rodrigobarroso.servico.impl.AeroportoAppServiceImpl;
-import com.rodrigobarroso.util.AeroportoNotFoundException;
+import com.rodrigobarroso.excecao.AirportNotFoundException;
+import com.rodrigobarroso.util.JPAUtil;
 import org.hibernate.exception.ConstraintViolationException;
-import javax.persistence.NoResultException;
+import jakarta.persistence.NoResultException;
 import java.util.List;
 import java.util.Scanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Main {
     public static void main(String[] args) {
+//        Logger logger = LoggerFactory.getLogger(Main.class);
+//        logger.error("Mensagem de log emitida utilizando o LOG4J");
+//        fatal - error - warning - info - debug
 
         AeroportoAppService aeroportoAppService = AeroportoAppServiceImpl.getInstance();
         Scanner sc = new Scanner(System.in);
@@ -165,12 +171,15 @@ public class Main {
                         System.out.println('\n' + "Aeroporto não encontrado!");
                     }
                 }
-                default -> System.out.println('\n' + "Opção inválida!");
+                default -> {
+                    JPAUtil.closeEntityManager();
+                    System.out.println('\n' + "Opção inválida! Voltando ao menu principal.");
+                }
             }
         }
         catch(NoResultException e) {
             System.out.println('\n' + "Aeroporto não encontrado!");
-        } catch (AeroportoNotFoundException e) {
+        } catch (AirportNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -190,7 +199,7 @@ public class Main {
         }
         catch(NoResultException e) {
             System.out.println('\n' + "Aeroporto não encontrado!");
-        } catch (AeroportoNotFoundException e) {
+        } catch (AirportNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -240,6 +249,7 @@ public class Main {
 
                 if(terminais.isEmpty()) {
                     System.out.println('\n' + "Nenhum terminal encontrado!");
+                    JPAUtil.closeEntityManager();
                 }
                 else {
                     for (Terminal terminal : terminais) {
@@ -249,13 +259,16 @@ public class Main {
                                 " | Aeroporto: " + terminal.getAeroporto().getCodigo() +
                                 " | Quantidade de Lojas: " + terminal.getQtdLojas());
                     }
+                    JPAUtil.closeEntityManager();
                 }
             }
-
+            else {
+                JPAUtil.closeEntityManager();
+            }
         }
         catch(NoResultException e) {
             System.out.println('\n' + "Aeroporto não encontrado!");
-        } catch (AeroportoNotFoundException e) {
+        } catch (AirportNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -265,6 +278,7 @@ public class Main {
 
         if(aeroportos.isEmpty()) {
             System.out.println('\n' + "Nenhum aeroporto encontrado!");
+            JPAUtil.closeEntityManager();
         }
         else {
             for (Aeroporto aeroporto : aeroportos) {
@@ -278,6 +292,7 @@ public class Main {
                         '\n' +
                         " | Quantidade de Terminais: " + aeroporto.getTerminais().size());
             }
+            JPAUtil.closeEntityManager();
         }
     }
 }

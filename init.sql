@@ -1,13 +1,14 @@
 USE psuff;
 
 CREATE TABLE aeroporto (
-    id integer auto_increment primary key,
-    codigo varchar(5) unique not null,
+    id integer auto_increment,
+    codigo varchar(5) unique not null primary key,
     endereco varchar(100) not null,
     nome varchar(100) unique not null,
     qtd_pistas integer,
     qtd_companhias integer,
-    version integer
+    version integer,
+    KEY `id` (`id`) 
 );
 
 CREATE TABLE terminal (

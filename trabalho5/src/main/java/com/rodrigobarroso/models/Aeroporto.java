@@ -4,6 +4,11 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
+@NamedQueries({
+        @NamedQuery(name = "Aeroporto.recuperaAeroporto", query = "SELECT a FROM Aeroporto a WHERE a.codigo = ?1")
+})
+// NamedQueries são queries com nomes personalizados para serem reutilizadas em diversos contextos.
+
 @Entity
 @Table(name="aeroporto")
 public class Aeroporto implements Serializable {

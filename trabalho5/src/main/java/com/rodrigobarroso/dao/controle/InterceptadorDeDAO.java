@@ -68,12 +68,18 @@ public class InterceptadorDeDAO implements MethodInterceptor {
             // está ou não anotado com uma anotação, nesse caso, @RecuperaObjeto. Caso o método tenha essa anotação,
             // será executado o método 'busca' de JPADaoGenerico.
             return daoGenerico.busca(method, args);
+            // O método busca irá receber 2 parametros, o método que está sendo interceptado e os args,
+            // esses args que serão utilizados para poder adicionar o valor dos filtros que queremos
+            // utilizar nessa busca.
         }
         else if(method.isAnnotationPresent(RecuperaLista.class)) {
             // isAnnotationPresent(RecuperaLista.class) é o método utilizado para retornar se o campo em questão
             // está ou não anotado com uma anotação, nesse caso, @RecuperaLista. Caso o método tenha essa anotação,
             // será executado o método 'buscaLista' de JPADaoGenerico.
             return daoGenerico.buscaLista(method, args);
+            // O método buscaLista irá receber 2 parametros, o método que está sendo interceptado e os args,
+            // porém nesse caso não teremos argumentos adicionais pois queremos retornar todos os objetos,
+            // sem nenhum filtro específico.
         }
         else {
             throw new RuntimeException("Executando o método " + method.getName() + " da classe/interface "

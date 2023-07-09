@@ -1,17 +1,13 @@
 package com.rodrigobarroso.servico.impl;
 
-import com.rodrigobarroso.anotacao.Autowired;
-import com.rodrigobarroso.anotacao.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import com.rodrigobarroso.dao.AeroportoDAO;
 import com.rodrigobarroso.models.Aeroporto;
 import com.rodrigobarroso.models.Terminal;
 import com.rodrigobarroso.servico.AeroportoAppService;
 import com.rodrigobarroso.excecao.AirportNotFoundException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 
-import jakarta.persistence.Query;
 import java.util.List;
 
 public class AeroportoAppServiceImpl implements AeroportoAppService {
@@ -26,7 +22,7 @@ public class AeroportoAppServiceImpl implements AeroportoAppService {
     // instância do DAO onde está definido o EntityManager como dito acima.
 
     @Autowired
-    protected AeroportoDAO aeroportoDAO;
+    private AeroportoDAO aeroportoDAO;
     // Foi alterado a forma como o valor de aeroportoDAO é injetado, agora ela é uma variável de instância,
     // para que sua implementação fique igual como a maneira que o Spring trabalha. (No Spring, o DAO é uma variável
     // de instância).
@@ -41,9 +37,11 @@ public class AeroportoAppServiceImpl implements AeroportoAppService {
     // classe que extende AeroportoAppServiceImpl, e quando ela criar esse objeto, ela irá injetar em aeroportoDAO
     // o objeto do tipo AeroportoDaoImpl.
 
+
+
     @Transactional
     public void adiciona(Aeroporto aeroporto) {
-        aeroportoDAO.adiciona(aeroporto);
+        aeroportoDAO.inclui(aeroporto);
     }
 
     @Transactional(rollbackFor = { AirportNotFoundException.class })
@@ -57,49 +55,42 @@ public class AeroportoAppServiceImpl implements AeroportoAppService {
 
     @Transactional
     public void deleta(String codigoAero) throws AirportNotFoundException {
+        Aeroporto aero = aeroportoDAO.recuperaUmAeroporto(codigoAero);
         try {
             if (codigoAero != null) {
-                aeroportoDAO.deleta(codigoAero);
+                aeroportoDAO.exclui(aero);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Aeroporto recuperaAeroporto(String codigo) {
-        String hql = "SELECT a from Aeroporto a where a.codigo = '%s'".formatted(codigo);
-
-        System.out.println(hql);
-
-        Configuration config = new Configuration().configure();
-        SessionFactory sessionFactory = config.buildSessionFactory();
-        Session session = sessionFactory.openSession();
-
-        Query query = session.createQuery(hql, Aeroporto.class);
-
-        return (Aeroporto) query.getSingleResult();
-    }
-
-
+    @Override
     public void adicionaTerminal(Terminal terminal) {
 
     }
 
+    public Aeroporto recuperaAeroporto(String codigo) {
+        try {
+            return aeroportoDAO.recuperaUmAeroporto(codigo);
+        } catch (AirportNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Aeroporto recuperaAeroportoETerminais(String codigo) {
+        try {
+            return aeroportoDAO.recuperaAeroportoETerminais(codigo);
+        } catch (AirportNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<Terminal> recuperaTerminais(Aeroporto aeroporto) {
-        return null;
+        return aeroportoDAO.recuperaTerminais(aeroporto);
     }
 
     public List<Aeroporto> recuperaAeroportos() {
-        String hql = "SELECT a from Aeroporto a order by a.id";
-
-        System.out.println(hql);
-
-        Configuration config = new Configuration().configure();
-        SessionFactory sessionFactory = config.buildSessionFactory();
-        Session session = sessionFactory.openSession();
-
-        Query query = session.createQuery(hql, Aeroporto.class);
-
-        return query.getResultList();
+        return aeroportoDAO.recuperaListaDeAeroportos();
     }
 }

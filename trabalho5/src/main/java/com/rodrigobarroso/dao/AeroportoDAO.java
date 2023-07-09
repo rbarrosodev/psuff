@@ -12,11 +12,14 @@ public interface AeroportoDAO extends DAOGenerico<Aeroporto, Long> {
     // void adicionaTerminal(Terminal terminal);
 
     @RecuperaObjeto
-    Aeroporto recuperaAeroporto(String codigo) throws AirportNotFoundException;
+    Aeroporto recuperaUmAeroporto(String codigo) throws AirportNotFoundException;
 
     @RecuperaLista
-    List<Aeroporto> recuperaAeroportos();
+    List<Aeroporto> recuperaListaDeAeroportos();
 
     @RecuperaLista
     List<Terminal> recuperaTerminais(Aeroporto aeroporto);
+
+    @RecuperaObjeto
+    Aeroporto recuperaAeroportoETerminais(String codigo) throws AirportNotFoundException;
 }

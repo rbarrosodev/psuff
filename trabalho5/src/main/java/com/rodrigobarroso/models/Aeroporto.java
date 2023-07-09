@@ -1,11 +1,14 @@
 package com.rodrigobarroso.models;
 
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.List;
 
 @NamedQueries({
-        @NamedQuery(name = "Aeroporto.recuperaAeroporto", query = "SELECT a FROM Aeroporto a WHERE a.codigo = ?1")
+        @NamedQuery(name = "Aeroporto.recuperaUmAeroporto", query = "SELECT a FROM Aeroporto a WHERE a.codigo = ?1"),
+        @NamedQuery(name = "Aeroporto.recuperaListaDeAeroportos", query = "SELECT a FROM Aeroporto a ORDER BY a.id"),
+        @NamedQuery(name = "Aeroporto.recuperaAeroportoETerminais", query = "SELECT a FROM Aeroporto a JOIN FETCH a.terminais WHERE a.codigo = ?1")
 })
 // NamedQueries são queries com nomes personalizados para serem reutilizadas em diversos contextos.
 
@@ -23,23 +26,20 @@ public class Aeroporto implements Serializable {
     @Column(name="endereco")
     private String endereco;
 
-    @OneToMany(mappedBy = "aeroporto", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "aeroporto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Terminal> terminais;
 
     @Column(name="nome")
     private String nome;
 
-    @Column(name="qtd_pistas")
+    @Column(name="qtdPistas")
     private Integer qtdPistas;
 
-    @Column(name="qtd_companhias")
+    @Column(name="qtdCompanhias")
     private Integer qtdCompanhias;
 
     @Version
-    @Column(name="version")
-    private int version;
-
-    public Aeroporto() {}
+    private Integer version;
 
     public Aeroporto(String codigo, String nome, String endereco, Integer qtdPistas, Integer qtdCompanhias) {
         this.codigo = codigo;
@@ -56,6 +56,10 @@ public class Aeroporto implements Serializable {
         this.terminais = terminais;
         this.qtdPistas = qtdPistas;
         this.qtdCompanhias = qtdCompanhias;
+    }
+
+    public Aeroporto() {
+
     }
 
     public Long getId() {
@@ -98,10 +102,6 @@ public class Aeroporto implements Serializable {
         this.id = id;
     }
 
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
@@ -118,9 +118,6 @@ public class Aeroporto implements Serializable {
         this.qtdPistas = qtdPistas;
     }
 
-    public void addPista(Integer pista) { this.qtdPistas += pista; }
     public void setQtdCompanhias(Integer qtdCompanhias) { this.qtdCompanhias = qtdCompanhias; }
 
-    public void addCompanhia(Integer companhia) { this.qtdCompanhias += companhia; }
 }
-

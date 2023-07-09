@@ -3,18 +3,32 @@ package com.rodrigobarroso;
 import com.rodrigobarroso.models.Aeroporto;
 import com.rodrigobarroso.models.Terminal;
 import com.rodrigobarroso.servico.AeroportoAppService;
-import com.rodrigobarroso.servico.controle.FabricaDeServico;
 import com.rodrigobarroso.excecao.AirportNotFoundException;
 import org.hibernate.exception.ConstraintViolationException;
 
 import jakarta.persistence.NoResultException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
 
-        AeroportoAppService aeroportoAppService = FabricaDeServico.getServico(AeroportoAppService.class);
+        //AeroportoAppService aeroportoAppService = FabricaDeServico.getServico(AeroportoAppService.class);
+
+        ApplicationContext fabrica = new ClassPathXmlApplicationContext("beans-jpa.xml");
+        // A linha acima irá procurar pelo arquivo de configuração 'beans-jpa.xml' na pasta resources.
+        // No Spring, o arquivo beans-jpa.xml é conhecido como ApplicationContext, e o método acima
+        // é utilizado pra procurar esse ApplicationContext no Classpath da aplicação.
+        // Esse objeto 'fabrica' do tipo ApplicationContext será criado a partir da consulta ao arquivo 'beans-jpa.xml'.
+        AeroportoAppService aeroportoAppService = (AeroportoAppService) fabrica.getBean("aeroportoAppService");
+        // Na linha acima, o objeto 'fabrica' está sendo utilizado para criar o proxy de serviço. O nome
+        // 'aeroportoAppService' está no arquivo de config 'beans-jpa.xml'.
+        // O proxy de serviço será um objeto de uma classe que extende AeroportoAppServiceImpl.
+        // aeroportoAppService será atribuído com o valor do proxy do serviço injetado, e no campo
+        // AeroportoDAO definido em AeroportoAppService, teremos o proxy do DAO injetado.
         Scanner sc = new Scanner(System.in);
         int options;
         boolean running = true;
@@ -200,13 +214,12 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         String codigo;
         Aeroporto aeroporto;
-        int terminalOpts;
 
         System.out.print('\n' + "Informe o código do aeroporto que gostaria de buscar: ");
         codigo = sc.nextLine();
 
         try {
-            aeroporto = aeroAppService.recuperaAeroporto(codigo);
+            aeroporto = aeroAppService.recuperaAeroportoETerminais(codigo);
             System.out.println('\n' +
                     "Id: " + aeroporto.getId() +
                     " | IATA: " + aeroporto.getCodigo() +
@@ -215,44 +228,19 @@ public class Main {
                     " | Quantidade de Pistas: " + aeroporto.getQtdPistas() +
                     " | Quantidade de Companhias Aéreas: " + aeroporto.getQtdCompanhias());
 
-            System.out.print('\n' + "Você gostaria de adicionar ou visualizar os terminais desse aeroporto? ");
-            System.out.println('\n' + "1. Adicionar um terminal");
-            System.out.println("2. Visualizar todos os terminais");
-            System.out.println("Digite qualquer outro número para voltar ao menu principal");
-            System.out.print("Escolha sua opção: ");
-            terminalOpts = Integer.parseInt(sc.nextLine());
-
-            if(terminalOpts == 1) {
-                int numTerminal;
-                int qtdLojas;
-
-                System.out.print('\n' + "Informe o número do terminal a ser criado: ");
-                numTerminal = Integer.parseInt(sc.nextLine());
-
-                System.out.print("Informe a quantidade de lojas: ");
-                qtdLojas = Integer.parseInt(sc.nextLine());
-
-                Terminal terminal = new Terminal(numTerminal, aeroporto, qtdLojas);
-
-                aeroAppService.adicionaTerminal(terminal);
+            if(aeroporto.getTerminais().isEmpty()) {
+                System.out.println('\n' + "Nenhum terminal encontrado!");
             }
-            else if(terminalOpts == 2) {
-                List<Terminal> terminais = aeroAppService.recuperaTerminais(aeroporto);
-
-                if(terminais.isEmpty()) {
-                    System.out.println('\n' + "Nenhum terminal encontrado!");
-                }
-                else {
-                    for (Terminal terminal : terminais) {
-                        System.out.println('\n' +
-                                "Id: " + terminal.getId() +
-                                " | Número: " + terminal.getNumTerminal() +
-                                " | Aeroporto: " + terminal.getAeroporto().getCodigo() +
-                                " | Quantidade de Lojas: " + terminal.getQtdLojas());
-                    }
+            else {
+                System.out.println("Terminais:");
+                for (Terminal terminal : aeroporto.getTerminais()) {
+                    System.out.println(
+                            "Id: " + terminal.getId() +
+                            " | Número: " + terminal.getNumTerminal() +
+                            " | Aeroporto: " + terminal.getAeroporto().getCodigo() +
+                            " | Quantidade de Lojas: " + terminal.getQtdLojas() + '\n');
                 }
             }
-
         }
         catch(NoResultException e) {
             System.out.println('\n' + "Aeroporto não encontrado!");
@@ -275,9 +263,7 @@ public class Main {
                         " | Nome: " + aeroporto.getNome() +
                         " | Endereço: " + aeroporto.getEndereco() +
                         " | Quantidade de Pistas: " + aeroporto.getQtdPistas() +
-                        " | Quantidade de Companhias Aéreas: " + aeroporto.getQtdCompanhias() +
-                        '\n' +
-                        " | Quantidade de Terminais: " + aeroporto.getTerminais().size());
+                        " | Quantidade de Companhias Aéreas: " + aeroporto.getQtdCompanhias());
             }
         }
     }

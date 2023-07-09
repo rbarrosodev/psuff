@@ -17,6 +17,8 @@ public interface AeroportoAppService {
 
     Aeroporto recuperaAeroporto(String codigo) throws AirportNotFoundException;
 
+    Aeroporto recuperaAeroportoETerminais(String codigo) throws AirportNotFoundException;
+
     List<Aeroporto> recuperaAeroportos();
 
     List<Terminal> recuperaTerminais(Aeroporto aeroporto);

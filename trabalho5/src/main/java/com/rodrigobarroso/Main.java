@@ -4,6 +4,7 @@ import com.rodrigobarroso.models.Aeroporto;
 import com.rodrigobarroso.models.Terminal;
 import com.rodrigobarroso.servico.AeroportoAppService;
 import com.rodrigobarroso.excecao.AirportNotFoundException;
+import com.rodrigobarroso.servico.TerminalAppService;
 import org.hibernate.exception.ConstraintViolationException;
 
 import jakarta.persistence.NoResultException;
@@ -14,10 +15,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-
-        //AeroportoAppService aeroportoAppService = FabricaDeServico.getServico(AeroportoAppService.class);
-
+    public static void main(String[] args) throws AirportNotFoundException {
         ApplicationContext fabrica = new ClassPathXmlApplicationContext("beans-jpa.xml");
         // A linha acima irá procurar pelo arquivo de configuração 'beans-jpa.xml' na pasta resources.
         // No Spring, o arquivo beans-jpa.xml é conhecido como ApplicationContext, e o método acima
@@ -29,6 +27,7 @@ public class Main {
         // O proxy de serviço será um objeto de uma classe que extende AeroportoAppServiceImpl.
         // aeroportoAppService será atribuído com o valor do proxy do serviço injetado, e no campo
         // AeroportoDAO definido em AeroportoAppService, teremos o proxy do DAO injetado.
+        TerminalAppService terminalAppService = (TerminalAppService) fabrica.getBean("terminalAppService");
         Scanner sc = new Scanner(System.in);
         int options;
         boolean running = true;
@@ -40,9 +39,11 @@ public class Main {
             System.out.println("3. Remover um aeroporto");
             System.out.println("4. Buscar um aeroporto específico");
             System.out.println("5. Listar todos os aeroportos");
-            System.out.println("6. Sair");
+            System.out.println(("6. Adicionar um novo terminal"));
+            System.out.println(("7. Listar todos os terminais"));
+            System.out.println("8. Sair");
 
-            System.out.print('\n' + "Digite um número entre 1 e 6: ");
+            System.out.print('\n' + "Digite um número entre 1 e 8: ");
             options = Integer.parseInt(sc.nextLine());
 
             switch(options) {
@@ -51,7 +52,9 @@ public class Main {
                 case 3 -> excluiAeroporto(aeroportoAppService);
                 case 4 -> buscaAeroporto(aeroportoAppService);
                 case 5 -> imprimeAeroportos(aeroportoAppService);
-                case 6 -> running = false;
+                case 6 -> adicionaTerminal(terminalAppService, aeroportoAppService);
+                case 7 -> imprimeTerminais(terminalAppService);
+                case 8 -> running = false;
                 default -> System.out.println('\n' + "Opção inválida!");
             }
         }
@@ -264,6 +267,51 @@ public class Main {
                         " | Endereço: " + aeroporto.getEndereco() +
                         " | Quantidade de Pistas: " + aeroporto.getQtdPistas() +
                         " | Quantidade de Companhias Aéreas: " + aeroporto.getQtdCompanhias());
+            }
+        }
+    }
+
+    private static void adicionaTerminal(TerminalAppService terminalAppService, AeroportoAppService aeroportoAppService) throws AirportNotFoundException {
+        int numero;
+        String codigoAero;
+        int qtdLojas;
+
+        Scanner sc = new Scanner(System.in);
+
+
+        System.out.print('\n' + "Informe o número do terminal: ");
+        numero = Integer.parseInt(sc.nextLine());
+
+        System.out.print("Informe a quantidade de lojas do terminal: ");
+        qtdLojas = Integer.parseInt(sc.nextLine());
+
+        System.out.print("Informe o código do aeroporto desse terminal: ");
+        codigoAero = sc.nextLine();
+
+        Terminal terminal = new Terminal(numero, aeroportoAppService.recuperaAeroporto(codigoAero), qtdLojas);
+
+        try {
+            terminalAppService.adiciona(terminal);
+            System.out.println('\n' + "Terminal adicionado com sucesso!");
+        }
+        catch(ConstraintViolationException e) {
+            System.out.println('\n' + "Houve um erro ao adicionar o terminal, verifique e tente novamente!");
+        }
+    }
+
+    private static void imprimeTerminais(TerminalAppService terminalAppService) {
+        List<Terminal> terminais = terminalAppService.recuperaTerminais();
+
+        if(terminais.isEmpty()) {
+            System.out.println('\n' + "Nenhum terminal encontrado!");
+        }
+        else {
+            for (Terminal terminal : terminais) {
+                System.out.println('\n' +
+                        "Id: " + terminal.getId() +
+                        " | Número do Terminal: " + terminal.getNumTerminal() +
+                        " | Aeroporto vinculado: " + terminal.getAeroporto().getCodigo() +
+                        " | Quantidade de lojas: " + terminal.getQtdLojas());
             }
         }
     }

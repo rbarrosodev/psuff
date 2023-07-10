@@ -3,6 +3,12 @@ package com.rodrigobarroso.models;
 import jakarta.persistence.*;
 import java.util.List;
 
+@NamedQueries({
+        @NamedQuery(name = "Terminal.recuperaTerminais", query = "SELECT t FROM Terminal t JOIN FETCH t.aeroporto ORDER BY t.id")
+})
+// NamedQueries são queries com nomes personalizados para serem reutilizadas em diversos contextos.
+// Os seus nomes são referentes ao nome do modelo + "." + nome do método declarado na interface AeroportoDAO.
+
 @Entity
 @Table(name="terminal")
 public class Terminal {
@@ -21,7 +27,7 @@ public class Terminal {
     @OneToMany(mappedBy = "terminal", cascade = CascadeType.ALL)
     private List<Portao> portoes;
 
-    @Column(name = "qtd_lojas")
+    @Column(name = "qtdLojas")
     private Integer qtdLojas;
 
     @Version

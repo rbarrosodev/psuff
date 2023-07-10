@@ -55,11 +55,6 @@ public class AeroportoAppServiceImpl implements AeroportoAppService {
         }
     }
 
-    @Override
-    public void adicionaTerminal(Terminal terminal) {
-
-    }
-
     public Aeroporto recuperaAeroporto(String codigo) {
         try {
             return aeroportoDAO.recuperaUmAeroporto(codigo);
@@ -74,10 +69,6 @@ public class AeroportoAppServiceImpl implements AeroportoAppService {
         } catch (AirportNotFoundException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public List<Terminal> recuperaTerminais(Aeroporto aeroporto) {
-        return aeroportoDAO.recuperaTerminais(aeroporto);
     }
 
     public List<Aeroporto> recuperaAeroportos() {

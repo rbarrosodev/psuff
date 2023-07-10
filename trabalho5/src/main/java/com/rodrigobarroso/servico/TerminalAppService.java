@@ -8,7 +8,5 @@ import java.util.List;
 public interface TerminalAppService {
     void adiciona(Terminal terminal);
 
-    List<Terminal> recuperaTerminaisPorAeroporto(Aeroporto aeroporto);
-
-    void adicionaTerminal(Terminal terminal);
+    List<Terminal> recuperaTerminais();
 }

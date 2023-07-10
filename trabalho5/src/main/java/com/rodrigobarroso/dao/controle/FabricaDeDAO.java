@@ -1,6 +1,7 @@
 package com.rodrigobarroso.dao.controle;
 
 import com.rodrigobarroso.dao.impl.AeroportoDaoImpl;
+import com.rodrigobarroso.dao.impl.TerminalDaoImpl;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,14 @@ public class FabricaDeDAO {
         // O método getAeroportoDao() é utilizado para retornar o DAO referente
         // ao Aeroporto, que nesse caso, é a classe da implementação do DAO do Aeroporto,
         // AeroportoDaoImpl.class.
+    }
+
+    @Bean
+    public static TerminalDaoImpl getTerminalDao() {
+        return getDao(com.rodrigobarroso.dao.impl.TerminalDaoImpl.class);
+        // O método getTerminalDao() é utilizado para retornar o DAO referente
+        // ao Terminal, que nesse caso, é a classe da implementação do DAO do Terminal,
+        // TerminalDaoImpl.class.
     }
 
     public static <T> T getDao(Class<T> classeDoDao) {

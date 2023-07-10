@@ -34,17 +34,35 @@ public class InterceptadorDeDAO implements MethodInterceptor {
 
     public Object intercept(Object objeto, Method metodo, Object[] args, MethodProxy metodoProxy) throws Throwable {
         JPADaoGenerico<?, ?> daoGenerico = (JPADaoGenerico<?, ?>) objeto;
+        // Essa atribuição é utilizada para atribuir à variável daoGenerico, o parâmetro objeto,
+        // que no caso, é o proxy. O daoGenerico tem tipo JPADaoGenerico<?, ?>, que é um tipo genérico
+        // do JPADaoGenerico, assim, ele poderá ter o tipo JPADaoGenerico<Aeroporto, Long> caso o proxy
+        // seja do tipo AeroportoDaoImpl. Esse objeto sofre um cast para o tipo JPADaoGenerico<?, ?>, para
+        // que o objeto seja tratado como uma instância de JPADaoGenerico ou uma das suas subclasses.
 
         if (metodo.isAnnotationPresent(RecuperaLista.class)) {
+            // isAnnotationPresent(RecuperaLista.class) é o método utilizado para retornar se o campo em questão
+            // está ou não anotado com uma anotação, nesse caso, @RecuperaLista.
             return daoGenerico.buscaLista(metodo, args);
+            // Caso entre no if acima, será retornado a execução do método 'buscaLista' do DAOGenerico, implementado
+            // por JPADaoGenerico, passando como parâmetros o método interceptado e seus argumentos, como um id,
+            // por exemplo.
         }
         else if (metodo.isAnnotationPresent(RecuperaObjeto.class)) {
+            // isAnnotationPresent(RecuperaObjeto.class) é o método utilizado para retornar se o campo em questão
+            // está ou não anotado com uma anotação, nesse caso, @RecuperaObjeto.
             return daoGenerico.busca(metodo, args);
+            // Caso entre no if acima, será retornado a execução do método 'busca' do DAOGenerico, implementado
+            // por JPADaoGenerico, passando como parâmetros o método interceptado e seus argumentos, como um id,
+            // por exemplo.
         }
         else {
             throw new InfrastructureException(
                     "O método " + metodo.getName() + " da classe " + metodo.getDeclaringClass() + " não foi anotado"
             );
+            // Caso um método não final seja interceptado e não tenha nenhuma das 2 anotações acima,
+            // irá cair nesse else, que lança uma InfrastructureException dizendo que o método interceptado
+            // da classe x não foi anotado.
         }
     }
 }

@@ -9,4 +9,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(METHOD)
 @Retention(RUNTIME)
 public @interface RecuperaLista {
+    // Essa anotação é utilizada em alguns métodos (métodos que retornem uma lista) do AeroportoDAO
+    // para que seja interceptado pelo InterceptadorDeDAO, e execute o método 'buscaLista' do DAOGenerico.
 }

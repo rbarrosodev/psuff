@@ -9,4 +9,7 @@ public abstract class AeroportoDaoImpl extends JPADaoGenerico<Aeroporto, Long> i
     public AeroportoDaoImpl() {
         super(Aeroporto.class);
     }
+
+    // AeroportoDaoImpl extende os métodos de JPADaoGenerico<Aeroporto,Long> trazendo seus métodos
+    // para si, e também implementa os métodos não genéricos de AeroportoDAO, como 'recuperaUmAeroporto'.
 }

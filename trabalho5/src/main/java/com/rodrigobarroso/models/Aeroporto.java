@@ -11,6 +11,7 @@ import java.util.List;
         @NamedQuery(name = "Aeroporto.recuperaAeroportoETerminais", query = "SELECT a FROM Aeroporto a JOIN FETCH a.terminais WHERE a.codigo = ?1")
 })
 // NamedQueries são queries com nomes personalizados para serem reutilizadas em diversos contextos.
+// Os seus nomes são referentes ao nome do modelo + "." + nome do método declarado na interface AeroportoDAO.
 
 @Entity
 @Table(name="aeroporto")

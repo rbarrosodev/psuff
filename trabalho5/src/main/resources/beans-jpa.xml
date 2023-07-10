@@ -11,8 +11,13 @@
                            http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <bean id="aeroportoAppService" class="com.rodrigobarroso.servico.impl.AeroportoAppServiceImpl"/>
+    <!-- Aqui é declarado o bean da interface AeroportoAppService, que é implementado pela classe
+        AeroportoAppServiceImpl !-->
 
     <context:component-scan base-package="com.rodrigobarroso.dao.controle" />
+    <!-- Aqui é declarado o package onde o Spring tem que procurar por componentes,
+        no caso é onde a FabricaDeDAO com anotação @Configuration está, onde também
+        está o @Bean do método getAeroportoDao(). -->
 
     <context:annotation-config />
 

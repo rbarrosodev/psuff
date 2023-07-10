@@ -218,6 +218,10 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class JPADaoGenerico<T, PK> implements DAOGenerico<T, PK> {
+    // o JPADaoGenerico implementa os métodos genéricos declarados na interface DAOGenerico,
+    // e através dos 2 parametros genéricos T e PK, é possível ter o tipo (T) do objeto que
+    // será utilizado para o método e PK para passar a primary key, no caso, o id, necessário
+    // em alguns métodos, como no getPorId, por exemplo.
 
     @PersistenceContext
     protected EntityManager em;

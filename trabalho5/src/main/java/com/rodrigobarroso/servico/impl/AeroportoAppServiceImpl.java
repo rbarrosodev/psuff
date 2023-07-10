@@ -11,16 +11,6 @@ import com.rodrigobarroso.excecao.AirportNotFoundException;
 import java.util.List;
 
 public class AeroportoAppServiceImpl implements AeroportoAppService {
-    // No Trabalho 4A, será criado um objeto dessa classe de serviço (exemplo AeroportoAppServiceImpl)
-    // para cada sessão de usuário.
-    // No Trabalho 4B, será criado para cada classe de serviço, um ÚNICO objeto dessa classe de serviço
-    // (exemplo AeroportoAppServiceImpl) para todos os usuários que estiverem interagindo com o projeto.
-    // No 4B, como esse único objeto de serviço vai referenciar o DAO abaixo, onde está definido a variável
-    // de instância 'em' (EntityManager), se utilizarmos a mesma implementação do 4A, quando o InterceptadorDeDAO
-    // para um determinado usuário atualizar o EntityManager para o EntityManager da thread corrente, todos
-    // os outros usuários utilizaram esse mesmo EntityManager, uma vez que na memória só existirá uma única
-    // instância do DAO onde está definido o EntityManager como dito acima.
-
     @Autowired
     private AeroportoDAO aeroportoDAO;
     // Foi alterado a forma como o valor de aeroportoDAO é injetado, agora ela é uma variável de instância,

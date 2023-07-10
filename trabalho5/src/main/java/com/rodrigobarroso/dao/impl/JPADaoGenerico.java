@@ -356,14 +356,13 @@ public class JPADaoGenerico<T, PK> implements DAOGenerico<T, PK> {
         // isto é, recuperaAeroportos de AeroportoDAO, e esse método irá retornar um
         // List<T> onde T será Aeroporto, logo, será retornado um List de objetos do tipo Aeroporto.
 
-        System.out.println("passou 1");
         try {
             String nomeDaBusca = getNomeDaBuscaPeloMetodo(metodo);
             // getNomeDaBuscaPeloMetodo retorna o nome do método do método passado,
             // para ser utilizado abaixo para a criação da query. (Olhar primeira linha do
             // método getNomeDaBuscaPeloMetodo).
 
-            System.out.println(nomeDaBusca);
+            System.out.println("Nome da busca utilizada: " + nomeDaBusca);
 
             Query namedQuery = em.createNamedQuery(nomeDaBusca);
             // Na linha acima, 'nomeDaBusca' é utilizado para recuperar a NamedQuery definida com o

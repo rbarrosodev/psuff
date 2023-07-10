@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="FacetManager">
+    <facet type="jpa" name="JPA">
+      <configuration>
+        <setting name="validation-enabled" value="true" />
+        <setting name="provider-name" value="Hibernate" />
+        <datasource-mapping>
+          <factory-entry name="trabalho5" value="7148fded-0166-426d-a129-7afcdea19977" />
+        </datasource-mapping>
+        <naming-strategy-map />
+      </configuration>
+    </facet>
+    <facet type="Spring" name="Spring">
+      <configuration>
+        <fileset id="fileset" name="Spring Application Context" removed="false">
+          <file>file://$MODULE_DIR$/src/main/resources/beans-jpa.xml</file>
+        </fileset>
+      </configuration>
+    </facet>
+  </component>
+</module>

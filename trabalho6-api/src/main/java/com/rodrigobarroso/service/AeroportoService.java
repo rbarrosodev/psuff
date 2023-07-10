@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+// AeroportoService é a classe que implementa os métodos que serão responsáveis
+// por chamar os métodos dos repositories. Os services são inicializados nos controllers.
 @Service
 public class AeroportoService {
 

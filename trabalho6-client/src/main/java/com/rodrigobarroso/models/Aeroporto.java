@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@ToString
+@NoArgsConstructor // Gera um construtor sem argumentos para a classe
+@AllArgsConstructor // Gera um construtor com todos os argumentos para a classe
+@Getter // Gera todos os métodos 'get' para os atributos da classe
+@Setter // Gera todos os métodos 'set' para os atributos da classe
+@ToString // Gera um método toString() automaticamente para a classe
 @Entity
+// A anotação @Entity é utilizada para marcar a classe como uma entitdade persistente, isso é,
+// essa classe representa uma tabela de um banco de dados.
 public class Aeroporto {
 
     @Id

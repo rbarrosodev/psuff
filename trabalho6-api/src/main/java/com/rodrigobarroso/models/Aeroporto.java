@@ -47,6 +47,5 @@ public class Aeroporto {
         this.endereco = endereco;
         this.terminais = terminais;
     }
-
 }
 

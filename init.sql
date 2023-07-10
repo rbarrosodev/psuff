@@ -31,7 +31,7 @@ CREATE TABLE portao (
     version integer
 );
 
-INSERT INTO aeroporto (codigo, endereco, nome, qtd_pistas, qtd_companhias, version)
+INSERT INTO aeroporto (codigo, endereco, nome, qtdPistas, qtdLojas, version)
 VALUES ('CGH', 'Av. Washington Luis - Vila Congonhas, Sao Paulo - SP', 'Aeroporto de Sao Paulo/Congonhas', 10, 25, 0);
 
 CREATE DATABASE trabalho6;
